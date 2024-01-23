@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { onMount, onDestroy, getContext, setContext } from 'svelte';
 	import L from 'leaflet';
+  	import { pinIcon } from '$lib/assets/pin';
 
 	export let width: number;
 	export let height: number;
 	export let latLng: L.LatLngExpression;
-
+	
 	let marker: L.Marker | undefined;
 	let markerElement: HTMLElement;
+	let iconElement: string = pinIcon
 
-	const { getMap }: { getMap: () => L.Map | undefined } = getContext('map');
+	const { getMap, getMarkerClusterGroup }: { getMap: () => L.Map | undefined, getMarkerClusterGroup: () => L.MarkerClusterGroup | undefined } = getContext('map');
 	const map = getMap();
+	const markers = getMarkerClusterGroup();
 
 	setContext('layer', {
 		// L.Marker inherits from L.Layer
@@ -18,13 +21,14 @@
 	});
 
 	onMount(() => {
-		if (map) {
+		if (map && markers) {
 			let icon = L.divIcon({
-				html: markerElement,
+				html: iconElement,
 				className: 'map-marker',
-				iconSize: L.point(width, height)
+				iconSize: L.point(width, height),
 			});
-			marker = L.marker(latLng, { icon }).addTo(map);
+
+			markers.addLayer(marker = L.marker(latLng, { icon }));
 		}
 	});
 

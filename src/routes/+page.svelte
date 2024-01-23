@@ -4,10 +4,10 @@
 
 	import LeafletMap from "$lib/components/LeafletMap.svelte";
   	import Marker from "$lib/components/Marker.svelte";
-  	import Pin from "$lib/components/Pin.svelte";
 	import MarkerPopup from "$lib/components/MarkerPopup.svelte";
   	import ModalSearch from "$lib/components/ModalSearch.svelte";
   	import type { PageData } from "./$types";
+  	import { pinIcon } from "$lib/assets/pin";
 			
 	interface MarkerPoints {
 		cityFullName: string;
@@ -36,7 +36,6 @@
 <LeafletMap view={initialView} zoom={2}>
 	{#each points as point}
 		<Marker latLng={point.coordinates} width={25} height={25}>
-			<Pin />
 			<MarkerPopup>
 				{point.cityFullName}
 			</MarkerPopup>
@@ -49,7 +48,7 @@
 		on:click={() => modalStore.trigger(modal)}
 	>
 		<div class="w-10 h-10">
-			<Pin />
+			{@html pinIcon}
 		</div>
 	</button>
 </LeafletMap>
